@@ -767,10 +767,10 @@ function App() {
   function emptyTheme() { 
     return <div className="grid place-items-center h-screen">
       <div className="flex items-center flex-col gap-8">
-        <h1  className="text-[30px] md:text-8xl text-center font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-pink-300">
+        <h1 id="letter-featured" className="intro text-[30px] md:text-8xl text-center font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-pink-300">
           CONVERT <br/> <i>FIGMA TOKENS</i> <br/> TO CSS
         </h1>
-        <button onClick={ () => document.getElementById('modal-tokens')?.click() } className="btn glass">Glass button</button>
+        <button onClick={ () => document.getElementById('modal-tokens')?.click() } className="intro intro-300 btn glass">Send tokens 🪄</button>
       </div>
     </div>
   }
@@ -780,7 +780,7 @@ function App() {
       <div className="artboard artboard-horizontal">
         {!themes.length && emptyTheme()}
         {themes.map( (theme: any, index: number) => { 
-          return <div key={index} className="p-6 bg-white rounded-xl mt-6 shadow-lg flex items-center space-x-4">
+          return <div key={index} className="intro p-6 bg-white rounded-xl mt-6 shadow-lg flex items-center space-x-4">
             <div className="w-full">
               <div className="flex py-3 items-center  justify-between">
                 <div className="text-[36px] font-medium text-black">{theme.name}</div>

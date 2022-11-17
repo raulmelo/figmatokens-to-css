@@ -13,3 +13,48 @@
 /* Stop purging. */
 
 /* Your own custom utilities */
+
+h1{
+  
+}
+
+#letter-featured { 
+  animation: animeTextH1 10s infinite alternate, 400ms ease-in-out var(--delay, 0ms) backwards running upAnimate;
+}
+
+.intro {
+  animation: 400ms ease-in-out var(--delay, 0ms) backwards running upAnimate;
+}
+
+.intro-300 {
+  --delay: 300ms;
+}
+
+@keyframes animeTextH1 {
+  0% {
+    filter: drop-shadow(2px 4px 6px #8c5cf6) drop-shadow(0px 800px 200px #3d1f7c);
+  }
+  25% {
+    filter: drop-shadow(0px 0px 10px #e2d9f4) drop-shadow(800px 0px 200px #401695);
+  }
+  50% {
+    filter: drop-shadow(0px 0px 10px #8c5cf6) drop-shadow(800px 0px 200px #401695);
+  }
+  75% {
+    filter: drop-shadow(0px 3px 6px #8c5cf6) drop-shadow(0px -700px 200px #e4e3e7);
+  }
+  100% {
+    filter: drop-shadow(2px 10px 6px #8c5cf6) drop-shadow(-200px 0px 200px #e2d9f4);
+  } 
+}
+
+@keyframes upAnimate {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }  
+}
