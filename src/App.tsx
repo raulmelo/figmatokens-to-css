@@ -1,45 +1,822 @@
+import { useState } from "react";
+import { Toaster } from 'react-hot-toast';
+import { Layout } from "./components/layout";
+
+import { getNameThemes, getObjectsInLoop } from "./utils";
 function App() {
-  return (
-    <div className="flex flex-col items-center justify-center h-screen text-red-300 bg-gradient-to-br from-gray-300 via-teal-700 to-gray-800">
-      <div className="flex items-center animate-bounce">
-        <svg viewBox="0 0 64 64" className="w-32 text-indigo-700 fill-current">
-          <path d="M52.275 22.147a63.008 63.008 0 0 0-2.025-.637c.112-.462.212-.925.313-1.387 1.537-7.45.524-13.437-2.888-15.412-3.287-1.888-8.65.075-14.075 4.8-.538.462-1.063.95-1.563 1.437-.337-.325-.687-.65-1.037-.962-5.688-5.05-11.387-7.175-14.8-5.188-3.275 1.9-4.25 7.537-2.875 14.587.138.7.288 1.388.463 2.088-.8.224-1.588.474-2.325.737C4.788 24.522 0 28.172 0 31.947c0 3.9 5.1 7.812 12.037 10.187.563.187 1.125.375 1.7.537a45.04 45.04 0 0 0-.5 2.25c-1.312 6.937-.287 12.437 2.988 14.324 3.375 1.95 9.05-.05 14.575-4.887.438-.387.875-.787 1.312-1.212.55.537 1.125 1.05 1.7 1.55 5.35 4.6 10.638 6.462 13.9 4.574 3.375-1.95 4.475-7.862 3.05-15.061a52.467 52.467 0 0 0-.374-1.688c.4-.112.787-.237 1.175-.362C58.775 39.772 64 35.909 64 31.947c0-3.787-4.925-7.462-11.725-9.8zM35.362 11.536c4.65-4.05 8.988-5.638 10.963-4.5 2.112 1.212 2.925 6.112 1.6 12.55a20.19 20.19 0 0 1-.287 1.249 63.994 63.994 0 0 0-8.413-1.325 63.153 63.153 0 0 0-5.325-6.637c.488-.463.962-.9 1.462-1.337zM20.9 38.434a86.067 86.067 0 0 0 1.975 3.237 56.605 56.605 0 0 1-5.8-.937c.55-1.8 1.238-3.662 2.038-5.562a82.583 82.583 0 0 0 1.787 3.262zm-3.787-15.037c1.8-.4 3.712-.725 5.7-.975a73.891 73.891 0 0 0-1.925 3.175 73.904 73.904 0 0 0-1.776 3.25 59.594 59.594 0 0 1-2-5.45zm3.425 8.612a78.537 78.537 0 0 1 2.674-5.074 75.374 75.374 0 0 1 3.05-4.863A78.408 78.408 0 0 1 32 21.86c1.95 0 3.875.075 5.737.212a87.325 87.325 0 0 1 3.038 4.838 85.138 85.138 0 0 1 2.712 5.05 82.936 82.936 0 0 1-2.7 5.1 85.374 85.374 0 0 1-3.024 4.874c-1.863.137-3.8.2-5.763.2-1.962 0-3.863-.063-5.7-.175a76.007 76.007 0 0 1-5.762-9.95zm22.574 6.4a86.342 86.342 0 0 0 1.825-3.337c.8 1.812 1.5 3.65 2.113 5.537-1.938.437-3.9.775-5.875 1a83.722 83.722 0 0 0 1.938-3.2zm1.8-9.562c-.587-1.1-1.187-2.2-1.812-3.275a81.255 81.255 0 0 0-1.913-3.15c2.013.25 3.938.588 5.738 1a55.315 55.315 0 0 1-2.012 5.425zM32.026 14.785a54.888 54.888 0 0 1 3.7 4.475 81.997 81.997 0 0 0-7.438 0 63.146 63.146 0 0 1 3.738-4.475zm-14.5-7.662c2.1-1.225 6.763.525 11.675 4.875.313.275.625.575.95.875a63.504 63.504 0 0 0-5.362 6.637c-2.826.25-5.625.688-8.4 1.3-.163-.637-.3-1.287-.438-1.937-1.175-6.05-.4-10.612 1.575-11.75zm-3.062 32.949a31.894 31.894 0 0 1-1.55-.488c-2.663-.837-5.688-2.162-7.876-3.9a5.609 5.609 0 0 1-2.35-3.737c0-2.287 3.95-5.212 9.65-7.2.713-.25 1.438-.475 2.163-.687a66.462 66.462 0 0 0 3.063 7.95 68.322 68.322 0 0 0-3.1 8.062zM29.038 52.32a22.88 22.88 0 0 1-7.05 4.412 5.533 5.533 0 0 1-4.413.163c-1.987-1.15-2.813-5.563-1.688-11.5.138-.7.288-1.4.463-2.087 2.8.6 5.625 1.012 8.487 1.225a65.963 65.963 0 0 0 5.4 6.674c-.4.388-.8.763-1.2 1.113zm3.062-3.037a59.114 59.114 0 0 1-3.788-4.538c1.2.05 2.438.075 3.688.075 1.288 0 2.55-.025 3.8-.087a53.904 53.904 0 0 1-3.7 4.55zm16.337 3.75a5.555 5.555 0 0 1-2.062 3.912c-1.987 1.15-6.225-.35-10.8-4.275-.525-.45-1.05-.938-1.588-1.438a61.833 61.833 0 0 0 5.276-6.7 61.623 61.623 0 0 0 8.525-1.312c.125.513.237 1.025.337 1.525.612 2.7.712 5.512.313 8.287zm2.276-13.437c-.35.112-.7.225-1.063.325a63.494 63.494 0 0 0-3.188-7.975 63.177 63.177 0 0 0 3.063-7.862c.65.187 1.275.387 1.875.587 5.825 2 9.913 4.975 9.913 7.25 0 2.45-4.363 5.612-10.6 7.675zM32 37.722a5.724 5.724 0 0 0 5.725-5.725A5.724 5.724 0 0 0 32 26.272a5.724 5.724 0 0 0-5.725 5.725A5.724 5.724 0 0 0 32 37.722z" />
-        </svg>
-        <span className="pl-5 pr-2 text-6xl">+</span>
-        <svg
-          className="w-32 text-indigo-700 fill-current"
-          viewBox="0 0 64 64"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M13.5 11.1C15.3 3.9 19.8.3 27 .3c10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 27.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z"
-            transform="translate(5 16)"
-          ></path>
-        </svg>
-      </div>
-      <p className="mt-6 tracking-wide">
-        Edit <code>src/App.tsx</code> and save to reload.
-      </p>
-      <div className="flex justify-center mt-4">
-        <a
-          className="px-4 py-2 text-white bg-indigo-500 rounded hover:bg-indigo-600"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <a
-          className="px-4 py-2 ml-4 text-white bg-indigo-500 rounded hover:bg-indigo-600"
-          href="https://tailwindcss.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn Tailwind CSS v3.x
-        </a>
+  const [themes, setThemes] = useState([]);
+  const [modeView, setModeView] = useState<'css' | 'json'>('css');
+
+
+  // useEffect(() => {
+  //   const item = {
+  //     "wiz": {
+  //       "fnx": {
+  //         "color": {
+  //           "primary": {
+  //             "extralight": {
+  //               "value": "#FFF0E4",
+  //               "type": "color",
+  //               "description": "Extra Light"
+  //             },
+  //             "lightest": {
+  //               "value": "#FFB578",
+  //               "type": "color",
+  //               "description": "Lightest"
+  //             },
+  //             "light": {
+  //               "value": "#FF8826",
+  //               "type": "color",
+  //               "description": "Light"
+  //             },
+  //             "medium": {
+  //               "value": "#EF6C00",
+  //               "type": "color",
+  //               "description": "Medium"
+  //             },
+  //             "dark": {
+  //               "value": "#BF5600",
+  //               "type": "color",
+  //               "description": "Dark"
+  //             },
+  //             "darkest": {
+  //               "value": "#8F4100",
+  //               "type": "color",
+  //               "description": "Darkest"
+  //             },
+  //             "extradark": {
+  //               "value": "#602B00",
+  //               "type": "color",
+  //               "description": "Extra Dark"
+  //             }
+  //           },
+  //           "secondary": {
+  //             "extralight": {
+  //               "value": "#DCFFFB",
+  //               "type": "color",
+  //               "description": "Extra Light"
+  //             },
+  //             "lightest": {
+  //               "value": "#00E7CD",
+  //               "type": "color",
+  //               "description": "Lightest"
+  //             },
+  //             "light": {
+  //               "value": "#00C4AE",
+  //               "type": "color",
+  //               "description": "Light"
+  //             },
+  //             "medium": {
+  //               "value": "#00A18F",
+  //               "type": "color",
+  //               "description": "Medium"
+  //             },
+  //             "dark": {
+  //               "value": "#008172",
+  //               "type": "color",
+  //               "description": "Dark"
+  //             },
+  //             "darkest": {
+  //               "value": "#006156",
+  //               "type": "color",
+  //               "description": "Darkest"
+  //             },
+  //             "extradark": {
+  //               "value": "#004039",
+  //               "type": "color",
+  //               "description": "Extra Dark"
+  //             }
+  //           },
+  //           "grayscale": {
+  //             "extradark": {
+  //               "value": "#212223",
+  //               "type": "color",
+  //               "description": "Extra dark"
+  //             },
+  //             "Darkest": {
+  //               "value": "#6F7276",
+  //               "type": "color",
+  //               "description": "Darkest"
+  //             },
+  //             "dark": {
+  //               "value": "#ACAFB1",
+  //               "type": "color",
+  //               "description": "Dark"
+  //             },
+  //             "medium": {
+  //               "value": "#C1C3C5",
+  //               "type": "color",
+  //               "description": "Medium"
+  //             },
+  //             "light": {
+  //               "value": "#D6D7D8",
+  //               "type": "color",
+  //               "description": "Light"
+  //             },
+  //             "lightest": {
+  //               "value": "#EAEBEB",
+  //               "type": "color",
+  //               "description": "Lightest"
+  //             },
+  //             "extralight": {
+  //               "value": "#FAFAFA",
+  //               "type": "color",
+  //               "description": "Extra light"
+  //             }
+  //           },
+  //           "feedback": {
+  //             "success": {
+  //               "extradark": {
+  //                 "value": "#004C35",
+  //                 "type": "color",
+  //                 "description": "Extra dark"
+  //               },
+  //               "darkest": {
+  //                 "value": "#007350",
+  //                 "type": "color",
+  //                 "description": "Darkest"
+  //               },
+  //               "dark": {
+  //                 "value": "#00996A",
+  //                 "type": "color",
+  //                 "description": "Dark"
+  //               },
+  //               "medium": {
+  //                 "value": "#00BF85",
+  //                 "type": "color",
+  //                 "description": "Medium"
+  //               },
+  //               "light": {
+  //                 "value": "#00FFB1",
+  //                 "type": "color",
+  //                 "description": "Light"
+  //               },
+  //               "lightest": {
+  //                 "value": "#7FFFD8",
+  //                 "type": "color",
+  //                 "description": "Lightest"
+  //               },
+  //               "extralight": {
+  //                 "value": "#BFFFEC",
+  //                 "type": "color",
+  //                 "description": "Extra light"
+  //               }
+  //             },
+  //             "warning": {
+  //               "extradark": {
+  //                 "value": "#3E2B00",
+  //                 "type": "color",
+  //                 "description": "Extra dark"
+  //               },
+  //               "darkest": {
+  //                 "value": "#7C5500",
+  //                 "type": "color",
+  //                 "description": "Darkest"
+  //               },
+  //               "dark": {
+  //                 "value": "#B98000",
+  //                 "type": "color",
+  //                 "description": "Dark"
+  //               },
+  //               "medium": {
+  //                 "value": "#FFC136",
+  //                 "type": "color",
+  //                 "description": "Medium"
+  //               },
+  //               "light": {
+  //                 "value": "#FFCD5E",
+  //                 "type": "color",
+  //                 "description": "Light"
+  //               },
+  //               "lightest": {
+  //                 "value": "#FFE09B",
+  //                 "type": "color",
+  //                 "description": "Lightest"
+  //               },
+  //               "extralight": {
+  //                 "value": "#FFF3D7",
+  //                 "type": "color",
+  //                 "description": "Extra light"
+  //               }
+  //             },
+  //             "error": {
+  //               "extradark": {
+  //                 "value": "#5A0303",
+  //                 "type": "color",
+  //                 "description": "Extra dark"
+  //               },
+  //               "darkest": {
+  //                 "value": "#860404",
+  //                 "type": "color",
+  //                 "description": "Darkest"
+  //               },
+  //               "dark": {
+  //                 "value": "#B30606",
+  //                 "type": "color",
+  //                 "description": "Dark"
+  //               },
+  //               "medium": {
+  //                 "value": "#FF3535",
+  //                 "type": "color",
+  //                 "description": "Medium"
+  //               },
+  //               "light": {
+  //                 "value": "#F94242",
+  //                 "type": "color",
+  //                 "description": "Light"
+  //               },
+  //               "lightest": {
+  //                 "value": "#FC9393",
+  //                 "type": "color",
+  //                 "description": "Lightest"
+  //               },
+  //               "extralight": {
+  //                 "value": "#FEE4E4",
+  //                 "type": "color",
+  //                 "description": "Extra light"
+  //               }
+  //             },
+  //             "info": {
+  //               "extradark": {
+  //                 "value": "#0A2340",
+  //                 "type": "color",
+  //                 "description": "Extra dark"
+  //               },
+  //               "darkest": {
+  //                 "value": "#103A6B",
+  //                 "type": "color",
+  //                 "description": "Darkest"
+  //               },
+  //               "dark": {
+  //                 "value": "#175296",
+  //                 "type": "color",
+  //                 "description": "Dark"
+  //               },
+  //               "medium": {
+  //                 "value": "#2175D6",
+  //                 "type": "color",
+  //                 "description": "Medium"
+  //               },
+  //               "light": {
+  //                 "value": "#4990E3",
+  //                 "type": "color",
+  //                 "description": "Light"
+  //               },
+  //               "lightest": {
+  //                 "value": "#8DBAED",
+  //                 "type": "color",
+  //                 "description": "Lightest"
+  //               },
+  //               "extralight": {
+  //                 "value": "#E8F1FB",
+  //                 "type": "color",
+  //                 "description": "Extra light"
+  //               }
+  //             }
+  //           }
+  //         },
+  //         "fontsize": {
+  //           "xxxs": {
+  //             "value": "12px",
+  //             "type": "fontSizes",
+  //             "description": "12px | 0.75rem"
+  //           },
+  //           "xxs": {
+  //             "value": "14px",
+  //             "type": "fontSizes",
+  //             "description": "14px | 0.875 rem"
+  //           },
+  //           "xs": {
+  //             "value": "16px",
+  //             "type": "fontSizes",
+  //             "description": "16px | 1rem"
+  //           },
+  //           "sm": {
+  //             "value": "18px",
+  //             "type": "fontSizes",
+  //             "description": "18px | 1.125rem"
+  //           },
+  //           "md": {
+  //             "value": "20px",
+  //             "type": "fontSizes",
+  //             "description": "20px | 1.25rem"
+  //           },
+  //           "lg": {
+  //             "value": "24px",
+  //             "type": "fontSizes",
+  //             "description": "24px | 1.5rem"
+  //           },
+  //           "xl": {
+  //             "value": "32px",
+  //             "type": "fontSizes",
+  //             "description": "32px | 2 rem"
+  //           },
+  //           "xxl": {
+  //             "value": "36px",
+  //             "type": "fontSizes",
+  //             "description": "36px | 2.25 rem"
+  //           }
+  //         },
+  //         "lineheight": {
+  //           "tight": {
+  //             "value": "100%",
+  //             "type": "lineHeights"
+  //           },
+  //           "medium": {
+  //             "value": "150%",
+  //             "type": "lineHeights"
+  //           },
+  //           "distant": {
+  //             "value": "170%",
+  //             "type": "lineHeights"
+  //           },
+  //           "super-distant": {
+  //             "value": "180%",
+  //             "type": "lineHeights"
+  //           },
+  //           "faraway": {
+  //             "value": "200%",
+  //             "type": "lineHeights"
+  //           }
+  //         },
+  //         "radius": {
+  //           "none": {
+  //             "value": "0px",
+  //             "type": "borderRadius",
+  //             "description": "0px | 0 rem"
+  //           },
+  //           "sm": {
+  //             "value": "4px",
+  //             "type": "borderRadius",
+  //             "description": "4px | 0.25 rem"
+  //           },
+  //           "md": {
+  //             "value": "8px",
+  //             "type": "borderRadius",
+  //             "description": "8px | 0.5 rem"
+  //           },
+  //           "circular": {
+  //             "value": "50%",
+  //             "type": "borderRadius",
+  //             "description": "Pill ou circular 50%"
+  //           }
+  //         },
+  //         "borderwidth": {
+  //           "none": {
+  //             "value": "0px",
+  //             "type": "borderWidth",
+  //             "description": "None or 0"
+  //           },
+  //           "hairline": {
+  //             "value": "0.5px",
+  //             "type": "borderWidth",
+  //             "description": "0.5px | 0.031 rem"
+  //           },
+  //           "thin": {
+  //             "value": "1px",
+  //             "type": "borderWidth",
+  //             "description": "1px | 0.063 rem"
+  //           },
+  //           "thick": {
+  //             "value": "2px",
+  //             "type": "borderWidth",
+  //             "description": "2px | 0.125 rem"
+  //           }
+  //         },
+  //         "opacity": {
+  //           "semi-transparent": {
+  //             "value": "16%",
+  //             "type": "opacity",
+  //             "description": "16%"
+  //           },
+  //           "light": {
+  //             "value": "20%",
+  //             "type": "opacity",
+  //             "description": "20%"
+  //           },
+  //           "medium": {
+  //             "value": "32%",
+  //             "type": "opacity",
+  //             "description": "32%"
+  //           }
+  //         },
+  //         "fontweight": {
+  //           "light": {
+  //             "value": "300",
+  //             "type": "fontWeights"
+  //           },
+  //           "regular": {
+  //             "value": "400",
+  //             "type": "fontWeights"
+  //           },
+  //           "medium": {
+  //             "value": "500",
+  //             "type": "fontWeights"
+  //           },
+  //           "semibold": {
+  //             "value": "600",
+  //             "type": "fontWeights"
+  //           },
+  //           "bold": {
+  //             "value": "700",
+  //             "type": "fontWeights"
+  //           },
+  //           "extrabold": {
+  //             "value": "800",
+  //             "type": "fontWeights",
+  //             "description": "Fonte mais pesada"
+  //           }
+  //         }
+  //       },
+  //       "shadow": {
+  //         "level-0": {
+  //           "value": {
+  //             "x": "0",
+  //             "y": "0",
+  //             "blur": "0",
+  //             "spread": "0",
+  //             "color": "#000",
+  //             "type": "innerShadow"
+  //           },
+  //           "type": "boxShadow",
+  //           "description": "Sem profundidade"
+  //         },
+  //         "level-1": {
+  //           "value": {
+  //             "x": "0",
+  //             "y": "2",
+  //             "blur": "16",
+  //             "spread": "0",
+  //             "color": "rgba(0,0,0,0.2)",
+  //             "type": "dropShadow"
+  //           },
+  //           "type": "boxShadow"
+  //         },
+  //         "level-2": {
+  //           "value": {
+  //             "x": "0",
+  //             "y": "4",
+  //             "blur": "16",
+  //             "spread": "0",
+  //             "color": "rgba(0,0,0,0.2)",
+  //             "type": "dropShadow"
+  //           },
+  //           "type": "boxShadow"
+  //         }
+  //       }
+  //     },
+  //     "corporate": {
+  //       "fnx": {
+  //         "color": {
+  //           "primary": {
+  //             "extralight": {
+  //               "value": "#FFF0E4",
+  //               "type": "color",
+  //               "description": "Extra Light"
+  //             },
+  //             "lightest": {
+  //               "value": "#FFB578",
+  //               "type": "color",
+  //               "description": "Lightest"
+  //             },
+  //             "light": {
+  //               "value": "#FF8826",
+  //               "type": "color",
+  //               "description": "Light"
+  //             },
+  //             "medium": {
+  //               "value": "#EF6C00",
+  //               "type": "color",
+  //               "description": "Medium"
+  //             },
+  //             "dark": {
+  //               "value": "#BF5600",
+  //               "type": "color",
+  //               "description": "Dark"
+  //             },
+  //             "darkest": {
+  //               "value": "#8F4100",
+  //               "type": "color",
+  //               "description": "Darkest"
+  //             },
+  //             "extradark": {
+  //               "value": "#602B00",
+  //               "type": "color",
+  //               "description": "Extra Dark"
+  //             }
+  //           },
+  //           "secondary": {
+  //             "extralight": {
+  //               "value": "#ECDFF0",
+  //               "type": "color",
+  //               "description": "Extra Light"
+  //             },
+  //             "lightest": {
+  //               "value": "#C69ED3",
+  //               "type": "color",
+  //               "description": "Lightest"
+  //             },
+  //             "light": {
+  //               "value": "#AA6EBC",
+  //               "type": "color",
+  //               "description": "Light"
+  //             },
+  //             "medium": {
+  //               "value": "#A05EB5",
+  //               "type": "color",
+  //               "description": "Medium"
+  //             },
+  //             "dark": {
+  //               "value": "#844597",
+  //               "type": "color",
+  //               "description": "Dark"
+  //             },
+  //             "darkest": {
+  //               "value": "#633471",
+  //               "type": "color",
+  //               "description": "Darkest"
+  //             },
+  //             "extradark": {
+  //               "value": "#42234B",
+  //               "type": "color",
+  //               "description": "Extra Dark"
+  //             }
+  //           }
+  //         }
+  //       }
+  //     },
+  //     "ppw": {
+  //       "fnx": {
+  //         "color": {
+  //           "primary": {
+  //             "extralight": {
+  //               "value": "#FFF0E4",
+  //               "type": "color",
+  //               "description": "Extra Light"
+  //             },
+  //             "lightest": {
+  //               "value": "#FFB578",
+  //               "type": "color",
+  //               "description": "Lightest"
+  //             },
+  //             "light": {
+  //               "value": "#FF8826",
+  //               "type": "color",
+  //               "description": "Light"
+  //             },
+  //             "medium": {
+  //               "value": "#EF6C00",
+  //               "type": "color",
+  //               "description": "Medium"
+  //             },
+  //             "dark": {
+  //               "value": "#BF5600",
+  //               "type": "color",
+  //               "description": "Dark"
+  //             },
+  //             "darkest": {
+  //               "value": "#8F4100",
+  //               "type": "color",
+  //               "description": "Darkest"
+  //             },
+  //             "extradark": {
+  //               "value": "#602B00",
+  //               "type": "color",
+  //               "description": "Extra Dark"
+  //             }
+  //           },
+  //           "secondary": {
+  //             "extralight": {
+  //               "value": "#E1E9F5",
+  //               "type": "color",
+  //               "description": "Extra Light"
+  //             },
+  //             "lightest": {
+  //               "value": "#A6BCE0",
+  //               "type": "color",
+  //               "description": "Lightest"
+  //             },
+  //             "light": {
+  //               "value": "#799BD1",
+  //               "type": "color",
+  //               "description": "Light"
+  //             },
+  //             "medium": {
+  //               "value": "#6A90CC",
+  //               "type": "color",
+  //               "description": "Medium"
+  //             },
+  //             "dark": {
+  //               "value": "#3F6EB9",
+  //               "type": "color",
+  //               "description": "Dark"
+  //             },
+  //             "darkest": {
+  //               "value": "#2F538B",
+  //               "type": "color",
+  //               "description": "Darkest"
+  //             },
+  //             "extradark": {
+  //               "value": "#20375C",
+  //               "type": "color",
+  //               "description": "Extra Dark"
+  //             }
+  //           }
+  //         }
+  //       }
+  //     },
+  //     "polishop": {
+  //       "fnx": {
+  //         "color": {
+  //           "primary": {
+  //             "extralight": {
+  //               "value": "#FFF0E4",
+  //               "type": "color",
+  //               "description": "Extra Light"
+  //             },
+  //             "lightest": {
+  //               "value": "#FFB578",
+  //               "type": "color",
+  //               "description": "Lightest"
+  //             },
+  //             "light": {
+  //               "value": "#FF8826",
+  //               "type": "color",
+  //               "description": "Light"
+  //             },
+  //             "medium": {
+  //               "value": "#EF6C00",
+  //               "type": "color",
+  //               "description": "Medium"
+  //             },
+  //             "dark": {
+  //               "value": "#BF5600",
+  //               "type": "color",
+  //               "description": "Dark"
+  //             },
+  //             "darkest": {
+  //               "value": "#8F4100",
+  //               "type": "color",
+  //               "description": "Darkest"
+  //             },
+  //             "extradark": {
+  //               "value": "#602B00",
+  //               "type": "color",
+  //               "description": "Extra Dark"
+  //             }
+  //           },
+  //           "secondary": {
+  //             "extralight": {
+  //               "value": "#E1E9F5",
+  //               "type": "color",
+  //               "description": "Extra Light"
+  //             },
+  //             "lightest": {
+  //               "value": "#A6BCE0",
+  //               "type": "color",
+  //               "description": "Lightest"
+  //             },
+  //             "light": {
+  //               "value": "#799BD1",
+  //               "type": "color",
+  //               "description": "Light"
+  //             },
+  //             "medium": {
+  //               "value": "#6A90CC",
+  //               "type": "color",
+  //               "description": "Medium"
+  //             },
+  //             "dark": {
+  //               "value": "#3F6EB9",
+  //               "type": "color",
+  //               "description": "Dark"
+  //             },
+  //             "darkest": {
+  //               "value": "#2F538B",
+  //               "type": "color",
+  //               "description": "Darkest"
+  //             },
+  //             "extradark": {
+  //               "value": "#20375C",
+  //               "type": "color",
+  //               "description": "Extra Dark"
+  //             }
+  //           }
+  //         }
+  //       },
+  //       "xxxs": {
+  //         "value": "12px",
+  //         "type": "fontSizes",
+  //         "description": "12px | 0.75rem"
+  //       }
+  //     },
+  //     "$themes": [],
+  //     "$metadata": {
+  //       "tokenSetOrder": [
+  //         "wiz",
+  //         "corporate",
+  //         "ppw",
+  //         "polishop"
+  //       ]
+  //     }
+  //   }
+  //   mountedJsonTokens(JSON.stringify(item))
+  // }, []);
+
+
+  function mountedJsonTokens(tokens: any) {
+    const JsonTokens = JSON.parse(tokens);
+
+    const nameThemes = getNameThemes(JsonTokens);
+    // debugger
+    const loopInObject = getObjectsInLoop(nameThemes, JsonTokens);
+    // debugger
+    try {
+      setThemes(loopInObject);
+    } catch (error) {
+      alert("não foi");
+    }
+  }
+
+
+
+
+  function convertRoot(item: string, mode: 'css' | 'json' = 'css', last = false) { 
+    const breack = item.split('-/')
+    const lastItem = !last ? ',' : ''
+    const regexHexDecimal = new RegExp(/[0-9A-Fa-f]{6}/g)
+    let showBlocColor = regexHexDecimal.test(breack[1])
+    const style: any = {
+      'background-color': showBlocColor ? breack[1] : ''
+    }
+
+
+    if(mode === 'json') {
+      return <span>
+        {`"` + breack[0] + `"` + ': ' + `"` +  breack[1] + `"` + lastItem}
+        <span className={"h-[22px] inline-flex w-[22px] ml-3 relative top-[4px]"} style={style} ></span>
+      </span>
+    }
+
+    return <span>
+        {breack[0] + ': ' + breack[1] + ';'}
+        <span className={"h-[22px] inline-flex w-[22px] ml-3 relative top-[4px]"} style={style} ></span>
+    </span> 
+  }
+
+  function emptyTheme() { 
+    return <div className="grid place-items-center h-screen">
+      <div className="flex items-center flex-col gap-8">
+        <h1  className="text-[30px] md:text-8xl text-center font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-pink-300">
+          CONVERT <br/> <i>FIGMA TOKENS</i> <br/> TO CSS
+        </h1>
+        <button onClick={ () => document.getElementById('modal-tokens')?.click() } className="btn glass">Glass button</button>
       </div>
     </div>
-  );
+  }
+
+  return <>
+    <Layout sendTokens={(tokens: any) => mountedJsonTokens(tokens)}>
+      <div className="artboard artboard-horizontal">
+        {!themes.length && emptyTheme()}
+        {themes.map( (theme: any, index: number) => { 
+          return <div key={index} className="p-6 bg-white rounded-xl mt-6 shadow-lg flex items-center space-x-4">
+            <div className="w-full">
+              <div className="flex py-3 items-center  justify-between">
+                <div className="text-[36px] font-medium text-black">{theme.name}</div>
+                <div className="tabs tabs-boxed">
+                  <a className={`tab ${modeView === 'css' ? 'tab-active' : ''}`} onClick={ () => setModeView('css') }>CSS</a> 
+                  <a className={`tab ${modeView === 'json' ? 'tab-active' : ''}`}  onClick={ () => setModeView('json') }>JSON</a> 
+                </div>
+              </div>
+                <pre>
+                  <code>
+                    {modeView === 'css' &&
+                      <div className="mockup-code">
+                        {theme.values.map( (item: any, index: number) => {
+                          return <pre key={index} data-prefix={index + 1}><code> --{convertRoot(item, 'css', false)}</code></pre> 
+                        } )}
+                      </div>
+                    }
+                    {modeView === 'json' &&
+                      <div className="mockup-code">
+                        <pre data-prefix={"-"} >{`{`}</pre>
+                        {theme.values.map( (item: any, index: number) => {
+                          return <pre key={index} data-prefix={index + 1}><code>{convertRoot(item, 'json', theme.values.length === (index + 1))}</code></pre> 
+                        })}
+                        <pre data-prefix={"-"} >{`}`}</pre>
+                      </div>
+                    }
+                  </code>
+                </pre>
+            </div>
+          </div>
+        })}
+
+      </div>
+    </Layout>
+    <Toaster/>
+  </>;
 }
 
 export default App;
