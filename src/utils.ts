@@ -1,5 +1,7 @@
 import flattenDeep from 'lodash/flattenDeep';
+import ConvertValue from './transforms/ConvertValue';
 import { shadowInner } from './transforms/shadow';
+import { TypographyInner } from './transforms/Typography';
 
 
 
@@ -95,9 +97,14 @@ function getValue(item: any) {
   if(item.type === 'boxShadow' && item.value) {
     return shadowInner(item);
   }
+  
+  if(item.type === "typography" && item.value) {
+    return TypographyInner(item);
+  }
+
 
   if(item.value) { 
-    return item.value
+    return ConvertValue(item.value)
   }
   return item
 }
