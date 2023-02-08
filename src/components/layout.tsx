@@ -1,5 +1,6 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import toast from 'react-hot-toast';
+import Typebot from "typebot-js";
 
 type Props = { 
   children: ReactNode,
@@ -7,6 +8,14 @@ type Props = {
 }
 
 export const Layout = (props: Props) =>  {
+
+
+  useEffect(() => {
+    var typebotCommands = Typebot.initBubble({
+      url: "https://viewer.typebot.io/figma-tokens-studio",
+      button: { color: "#7209b7" },
+    });
+  }, []);
 
   const [JsonTokens, setJsonTokens] = useState( '' );
 
